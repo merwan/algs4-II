@@ -12,28 +12,55 @@ public class SAP {
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
         if (G == null) throw new NullPointerException();
-        this.G = G;
+        this.G = new Digraph(G);
     }
 
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
         checkVertex(v);
         checkVertex(w);
+
+        Pair pair = findAncestor(v, w);
+
+        return pair.getLength();
+    }
+
+    private Pair findAncestor(int v, int w) {
         BreadthFirstDirectedPaths vpath = new BreadthFirstDirectedPaths(G, v);
         BreadthFirstDirectedPaths wpath = new BreadthFirstDirectedPaths(G, w);
-        int length = Integer.MAX_VALUE;
+        Pair pair = new Pair(Integer.MAX_VALUE, -1);
         for (int i = 0; i < G.V(); i++) {
             int distToV = vpath.distTo(i);
             int distToW = wpath.distTo(i);
-            if (distToV < length && distToW < length) {
-                length = distToV + distToW;
+            if (distToV < Integer.MAX_VALUE && distToW < Integer.MAX_VALUE) {
+                int totalLength = distToV + distToW;
+                if (totalLength < pair.getLength()) {
+                    pair = new Pair(totalLength, i);
+                }
             }
         }
-        if (length == Integer.MAX_VALUE) {
-            length = -1;
+        if (pair.getLength() == Integer.MAX_VALUE) {
+            pair = new Pair(-1, pair.getAncestor());
+        }
+        return pair;
+    }
+
+    private class Pair {
+        private final int length;
+        private final int ancestor;
+
+        Pair(int length, int ancestor) {
+            this.length = length;
+            this.ancestor = ancestor;
         }
 
-        return length;
+        public int getLength() {
+            return length;
+        }
+
+        public int getAncestor() {
+            return ancestor;
+        }
     }
 
     private void checkVertex(int v) {
@@ -45,27 +72,22 @@ public class SAP {
     public int ancestor(int v, int w) {
         checkVertex(v);
         checkVertex(w);
-        BreadthFirstDirectedPaths vpath = new BreadthFirstDirectedPaths(G, v);
-        BreadthFirstDirectedPaths wpath = new BreadthFirstDirectedPaths(G, w);
-        int ancestor = -1;
-        int length = Integer.MAX_VALUE;
-        for (int i = 0; i < G.V(); i++) {
-            int distToV = vpath.distTo(i);
-            int distToW = wpath.distTo(i);
-            if (distToV < length && distToW < length) {
-                ancestor = i;
-                length = distToV + distToW;
-            }
-        }
 
-        return ancestor;
+        Pair pair = findAncestor(v, w);
+        return pair.getAncestor();
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex
     // in w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
         if (v == null) throw new NullPointerException();
+        for (int i : v) {
+            checkVertex(i);
+        }
         if (w == null) throw new NullPointerException();
+        for (int i : w) {
+            checkVertex(i);
+        }
         return 0;
     }
 
