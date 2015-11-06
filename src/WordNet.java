@@ -1,4 +1,4 @@
-package wordnet;
+
 
 public class WordNet {
 
@@ -9,7 +9,7 @@ public class WordNet {
     }
 
     // returns all WordNet nouns
-    public Iterable<String> nouns(){
+    public Iterable<String> nouns() {
         return null;
     }
 
@@ -26,8 +26,8 @@ public class WordNet {
         return -1;
     }
 
-    // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
-    // in a shortest ancestral path (defined below)
+    // a synset (second field of synsets.txt) that is the common ancestor
+    // of nounA and nounB in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
         if (nounA == null) throw new NullPointerException();
         if (nounB == null) throw new NullPointerException();
