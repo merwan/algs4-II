@@ -20,14 +20,19 @@ public class SAP {
         checkVertex(v);
         checkVertex(w);
 
-        Pair pair = findAncestor(v, w);
+        Pair pair = findAncestorSingleSource(v, w);
 
         return pair.getLength();
     }
 
-    private Pair findAncestor(int v, int w) {
+    private Pair findAncestorSingleSource(int v, int w) {
         BreadthFirstDirectedPaths vpath = new BreadthFirstDirectedPaths(G, v);
         BreadthFirstDirectedPaths wpath = new BreadthFirstDirectedPaths(G, w);
+        return findAncestor(vpath, wpath);
+    }
+
+    private Pair findAncestor(BreadthFirstDirectedPaths vpath,
+            BreadthFirstDirectedPaths wpath) {
         Pair pair = new Pair(Integer.MAX_VALUE, -1);
         for (int i = 0; i < G.V(); i++) {
             int distToV = vpath.distTo(i);
@@ -73,30 +78,42 @@ public class SAP {
         checkVertex(v);
         checkVertex(w);
 
-        Pair pair = findAncestor(v, w);
+        Pair pair = findAncestorSingleSource(v, w);
         return pair.getAncestor();
+    }
+
+    private void checkVertexList(Iterable<Integer> v) {
+        if (v == null) throw new NullPointerException();
+        for (int i : v) {
+            checkVertex(i);
+        }
+    }
+
+    private Pair findAncestorMultipleSources(Iterable<Integer> v,
+            Iterable<Integer> w) {
+        BreadthFirstDirectedPaths vpath = new BreadthFirstDirectedPaths(G, v);
+        BreadthFirstDirectedPaths wpath = new BreadthFirstDirectedPaths(G, w);
+        return findAncestor(vpath, wpath);
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex
     // in w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        if (v == null) throw new NullPointerException();
-        for (int i : v) {
-            checkVertex(i);
-        }
-        if (w == null) throw new NullPointerException();
-        for (int i : w) {
-            checkVertex(i);
-        }
-        return 0;
+        checkVertexList(v);
+        checkVertexList(w);
+
+        Pair pair = findAncestorMultipleSources(v, w);
+        return pair.length;
     }
 
     // a common ancestor that participates in shortest ancestral path; -1 if
     // no such path
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        if (v == null) throw new NullPointerException();
-        if (w == null) throw new NullPointerException();
-        return 0;
+        checkVertexList(v);
+        checkVertexList(w);
+
+        Pair pair = findAncestorMultipleSources(v, w);
+        return pair.ancestor;
     }
 
     // do unit testing of this class
