@@ -5,9 +5,7 @@ public class SeamCarver {
 
 	// create a seam carver object based on the given picture
 	public SeamCarver(Picture picture) {
-		if (picture == null) {
-			throw new NullPointerException();
-		}
+		checkNull(picture);
 		this.picture = new Picture(picture);
 	}
 
@@ -49,9 +47,17 @@ public class SeamCarver {
 
 	// remove horizontal seam from current picture
 	public void removeHorizontalSeam(int[] seam) {
+		checkNull(seam);
 	}
 
 	// remove vertical seam from current picture
 	public void removeVerticalSeam(int[] seam) {
+		checkNull(seam);
+	}
+
+	private void checkNull(Object o) {
+		if (o == null) {
+			throw new NullPointerException();
+		}
 	}
 }
