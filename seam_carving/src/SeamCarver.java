@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
@@ -37,7 +39,26 @@ public class SeamCarver {
         if (isAtBorder(x, y)) {
             return MAX_ENERGY;
         }
-        return 0;
+
+        return Math.sqrt(dx2(x, y) + dy2(x, y));
+    }
+
+    private double dx2(int x, int y) {
+        Color color2 = picture.get(x + 1, y);
+        Color color1 = picture.get(x - 1, y);
+        double R = color2.getRed() - color1.getRed();
+        double G = color2.getGreen() - color1.getGreen();
+        double B = color2.getBlue() - color1.getBlue();
+        return R*R + G*G + B*B;
+    }
+
+    private double dy2(int x, int y) {
+        Color color2 = picture.get(x, y + 1);
+        Color color1 = picture.get(x, y - 1);
+        double R = color2.getRed() - color1.getRed();
+        double G = color2.getGreen() - color1.getGreen();
+        double B = color2.getBlue() - color1.getBlue();
+        return R*R + G*G + B*B;
     }
 
     private boolean isAtBorder(int x, int y) {
