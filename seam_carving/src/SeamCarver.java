@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
+    private static final double MAX_ENERGY = 1000;
     private final Picture picture;
 
     // create a seam carver object based on the given picture
@@ -32,7 +33,16 @@ public class SeamCarver {
         if (y < 0 || y >= height()) {
             throw new IndexOutOfBoundsException("y is out of bounds");
         }
+
+        if (isAtBorder(x, y)) {
+            return MAX_ENERGY;
+        }
         return 0;
+    }
+
+    private boolean isAtBorder(int x, int y) {
+        return x == 0 || x == width() -1 ||
+                y == 0 || y == height() - 1;
     }
 
     // sequence of indices for horizontal seam
