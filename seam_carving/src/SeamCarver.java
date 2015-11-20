@@ -49,7 +49,7 @@ public class SeamCarver {
     public void removeHorizontalSeam(int[] seam) {
         checkNull(seam);
         checkLength(seam, width());
-        checkValidSeam(seam);
+        checkValidSeam(seam, height());
         if (height() <= 1) {
             throw new IllegalArgumentException("Height is too small");
         }
@@ -59,7 +59,7 @@ public class SeamCarver {
     public void removeVerticalSeam(int[] seam) {
         checkNull(seam);
         checkLength(seam, height());
-        checkValidSeam(seam);
+        checkValidSeam(seam, width());
         if (width() <= 1) {
             throw new IllegalArgumentException("Width is too small");
         }
@@ -77,7 +77,13 @@ public class SeamCarver {
         }
     }
 
-    private void checkValidSeam(int[] seam) {
+    private void checkValidSeam(int[] seam, int length) {
+        for (int i = 0; i < seam.length; i++) {
+            if (seam[i] < 0 || seam[i] >= length) {
+                throw new IllegalArgumentException("Seam value is out of range");
+            }
+        }
+
         for (int i = 1; i < seam.length; i++) {
             if (Math.abs(seam[i] - seam[i-1]) > 1) {
                 throw new IllegalArgumentException("Seam is invalid");
